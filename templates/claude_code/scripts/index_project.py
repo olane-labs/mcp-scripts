@@ -17,6 +17,7 @@ import json
 import os
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from fnmatch import fnmatch
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -539,45 +540,49 @@ def main():
             except (json.JSONDecodeError, OSError) as e:
                 print(f"  Warning: Could not save project_id to config: {e}", file=sys.stderr)
 
-    # Phase 2: Extract (one file per request — API handles batching)
-    print(f"\nPosting {len(files)} files to {api_url}...")
+    # Phase 2: Extract (batched 10 at a time)
+    BATCH_SIZE = 10
+    print(f"\nPosting {len(files)} files to {api_url} (batch size: {BATCH_SIZE})...")
     files_processed = 0
     errors = []
     t_start = time.monotonic()
 
-    for file_idx, file_path in enumerate(files):
-        file_num = file_idx + 1
-        rel_path = file_path.relative_to(project_path)
+    def upload_file(file_idx_and_path):
+        file_idx, fp = file_idx_and_path
+        rel_path = fp.relative_to(project_path)
+        text_payload = build_file_payload(fp, project_path)
+        post_extract(
+            api_url=api_url,
+            user_id=user_id,
+            text_payload=text_payload,
+            mode=args.mode,
+            project_path_str=str(project_path),
+            file_rel_path=str(rel_path),
+            auth_token=auth_token,
+            crypto=crypto,
+            dek_b64=dek_b64,
+            project_id=project_id or "",
+        )
+        return file_idx, rel_path, len(text_payload)
 
-        try:
-            text_payload = build_file_payload(file_path, project_path)
-            print(
-                f"  [{file_num}/{len(files)}] {rel_path} ({len(text_payload)} chars) ... ",
-                end="",
-                flush=True,
-            )
+    for batch_start in range(0, len(files), BATCH_SIZE):
+        batch = list(enumerate(files[batch_start:batch_start + BATCH_SIZE], start=batch_start + 1))
+        batch_end = min(batch_start + BATCH_SIZE, len(files))
+        print(f"  Batch [{batch_start + 1}-{batch_end}/{len(files)}]...")
 
-            response = post_extract(
-                api_url=api_url,
-                user_id=user_id,
-                text_payload=text_payload,
-                mode=args.mode,
-                project_path_str=str(project_path),
-                file_rel_path=str(rel_path),
-                auth_token=auth_token,
-                crypto=crypto,
-                dek_b64=dek_b64,
-                project_id=project_id or "",
-            )
-
-            files_processed += 1
-
-            print("OK")
-
-        except Exception as e:
-            error_msg = f"{rel_path} failed: {e}"
-            errors.append(error_msg)
-            print(f"FAILED: {e}")
+        with ThreadPoolExecutor(max_workers=BATCH_SIZE) as executor:
+            futures = {executor.submit(upload_file, (idx, fp)): (idx, fp) for idx, fp in batch}
+            for future in as_completed(futures):
+                idx, fp = futures[future]
+                rel_path = fp.relative_to(project_path)
+                try:
+                    _, _, chars = future.result()
+                    files_processed += 1
+                    print(f"    [{idx}/{len(files)}] {rel_path} ({chars} chars) OK")
+                except Exception as e:
+                    error_msg = f"{rel_path} failed: {e}"
+                    errors.append(error_msg)
+                    print(f"    [{idx}/{len(files)}] {rel_path} FAILED: {e}")
 
     # Phase 3: Summary
     duration = time.monotonic() - t_start
