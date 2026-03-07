@@ -541,9 +541,6 @@ def main():
 
     # Phase 2: Extract (one file per request — API handles batching)
     print(f"\nPosting {len(files)} files to {api_url}...")
-    total_entities = 0
-    total_behaviors = 0
-    total_containments = 0
     files_processed = 0
     errors = []
     t_start = time.monotonic()
@@ -573,16 +570,6 @@ def main():
                 project_id=project_id or "",
             )
 
-            file_entities = (
-                response.get("canonicals_created", 0)
-                + response.get("canonicals_reused", 0)
-            )
-            file_behaviors = response.get("behaviors_extracted", 0)
-            file_containments = response.get("containments_extracted", 0)
-
-            total_entities += file_entities
-            total_behaviors += file_behaviors
-            total_containments += file_containments
             files_processed += 1
 
             print("OK")
