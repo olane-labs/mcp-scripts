@@ -2,8 +2,7 @@
 # post_tool_use.sh — PostToolUse hook for Copass.
 # Only captures code mutations (Edit, Write, NotebookEdit).
 # Everything else is covered by the transcript upload in stop.sh.
-# Omits per-invocation fields (session_id, timestamp, user_id)
-# so identical semantic events share the same input hash.
+
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/_common.sh"
