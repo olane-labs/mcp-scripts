@@ -597,9 +597,6 @@ def main():
     print(f"\n{'='*50}")
     print(f"Indexing complete in {duration:.1f}s")
     print(f"  Files processed: {files_processed}/{len(files)}")
-    print(f"  Entities:        {total_entities}")
-    print(f"  Behaviors:       {total_behaviors}")
-    print(f"  Containments:    {total_containments}")
 
     # Update project status
     if project_id:
@@ -608,8 +605,6 @@ def main():
             method="PATCH",
             payload={
                 "file_count": files_processed,
-                "entity_count": total_entities,
-                "behavior_count": total_behaviors,
                 "error_count": len(errors),
                 "duration_ms": int(duration * 1000),
             },
