@@ -338,6 +338,7 @@ def _cli_generate_key():
             print(f"Warning: Could not read {config_path}: {e}", file=sys.stderr)
 
     if config.get("copass_encryption_key"):
+        
         print("Master key already exists in .olane/config.json — skipping generation.", file=sys.stderr)
         print(config["copass_encryption_key"])
         return

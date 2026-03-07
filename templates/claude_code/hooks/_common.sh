@@ -39,6 +39,7 @@ OLANE_USER_ID="${OLANE_USER_ID:-}"
 OLANE_AUTH_TOKEN="${OLANE_AUTH_TOKEN:-}"
 COPASS_ENCRYPTION_KEY="${COPASS_ENCRYPTION_KEY:-}"
 OLANE_HOOKS_ENABLED="${OLANE_HOOKS_ENABLED:-}"
+OLANE_PROJECT_ID="${OLANE_PROJECT_ID:-}"
 
 _load_config() {
     # Try to read from config.json if jq is available
@@ -57,6 +58,9 @@ _load_config() {
         fi
         if [ -z "${OLANE_HOOKS_ENABLED}" ]; then
             OLANE_HOOKS_ENABLED="$(jq -r '.hooks.enabled // empty' "${OLANE_CONFIG_FILE}" 2>/dev/null || true)"
+        fi
+        if [ -z "${OLANE_PROJECT_ID}" ]; then
+            OLANE_PROJECT_ID="$(jq -r '.project_id // empty' "${OLANE_CONFIG_FILE}" 2>/dev/null || true)"
         fi
     fi
 

@@ -51,6 +51,9 @@ esac
 # ── Send as text extraction (no source_id — avoids hash pollution) ────
 OBSERVATION_ESC="$(_json_escape "${OBSERVATION}")"
 PAYLOAD="{\"text\":\"${OBSERVATION_ESC}\",\"source_type\":\"agent_observation\",\"client_type\":\"claude_code\"}"
+if [ -n "${OLANE_PROJECT_ID}" ]; then
+    PAYLOAD="{\"text\":\"${OBSERVATION_ESC}\",\"source_type\":\"agent_observation\",\"client_type\":\"claude_code\",\"project_id\":\"${OLANE_PROJECT_ID}\"}"
+fi
 
 _api_post_async "/api/v1/extract" "${PAYLOAD}" 5
 

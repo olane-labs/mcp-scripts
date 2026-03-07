@@ -332,6 +332,7 @@ def post_extract(
     retries: int = 3,
     crypto=None,
     dek_b64: str = "",
+    project_id: str = "",
 ) -> dict:
     """POST a single file to the extract API with retry on 5xx/connection errors."""
     url = f"{api_url.rstrip('/')}/api/v1/extract/code"
@@ -347,6 +348,8 @@ def post_extract(
             "file": file_rel_path,
         },
     }
+    if project_id:
+        payload_dict["project_id"] = project_id
 
     # Encrypt if crypto is available
     if crypto:
@@ -524,6 +527,17 @@ def main():
     project_id = register_resp.get("project_id")
     if project_id:
         print(f"  Registered project: {project_id[:8]}...")
+        # Persist project_id to config so hooks can use it
+        config_file = project_path / ".olane" / "config.json"
+        if config_file.is_file():
+            try:
+                with open(config_file, "r", encoding="utf-8") as f:
+                    file_config = json.load(f)
+                file_config["project_id"] = project_id
+                with open(config_file, "w", encoding="utf-8") as f:
+                    json.dump(file_config, f, indent=2)
+            except (json.JSONDecodeError, OSError) as e:
+                print(f"  Warning: Could not save project_id to config: {e}", file=sys.stderr)
 
     # Phase 2: Extract (one file per request — API handles batching)
     print(f"\nPosting {len(files)} files to {api_url}...")
@@ -556,6 +570,7 @@ def main():
                 auth_token=auth_token,
                 crypto=crypto,
                 dek_b64=dek_b64,
+                project_id=project_id or "",
             )
 
             file_entities = (
@@ -570,10 +585,7 @@ def main():
             total_containments += file_containments
             files_processed += 1
 
-            print(
-                f"OK (entities={file_entities}, behaviors={file_behaviors}, "
-                f"containments={file_containments})"
-            )
+            print("OK")
 
         except Exception as e:
             error_msg = f"{rel_path} failed: {e}"

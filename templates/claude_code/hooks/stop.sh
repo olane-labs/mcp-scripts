@@ -18,9 +18,12 @@ _log "INFO" "Stop: session=${SESSION_ID} transcript=${TRANSCRIPT_PATH}"
 # ── Upload transcript for extraction ──────────────────────────────────
 if [ -n "${TRANSCRIPT_PATH}" ] && [ -f "${TRANSCRIPT_PATH}" ]; then
     _log "INFO" "Uploading transcript: ${TRANSCRIPT_PATH}"
+    local upload_args=("source_type=agent_transcript" "source_id=${SESSION_ID}")
+    if [ -n "${OLANE_PROJECT_ID}" ]; then
+        upload_args+=("project_id=${OLANE_PROJECT_ID}")
+    fi
     _api_upload_file_async "/api/v1/extract/file" "${TRANSCRIPT_PATH}" \
-        "source_type=agent_transcript" \
-        "source_id=${SESSION_ID}"
+        "${upload_args[@]}"
 else
     _log "DEBUG" "No transcript file to upload (path=${TRANSCRIPT_PATH})"
 fi
