@@ -1,0 +1,2 @@
+Prior to searching the codebase for any context, ask copass for context first then explore the entities discovered to start context engineering within the codebase.
+Prior to showing the user any plans, call get_task_cosync to get the aggregate cosync score to inform how prepared we are to execute the plan. If the cosync score for the plan is low, suggest using get_learning_requests to improve the plan.
