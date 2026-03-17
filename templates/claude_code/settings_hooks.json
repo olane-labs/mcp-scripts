@@ -1,37 +1,50 @@
 {
   "hooks": {
-    "PostToolUse": [
+    "UserPromptSubmit": [
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash .olane/hooks/post_tool_use.sh",
-            "timeout": 10
+            "command": "bash .olane/hooks/olane-copass__user_prompt_submit.sh",
+            "timeout": 8,
+            "statusMessage": "Querying context layer..."
           }
         ]
       }
     ],
-    "Notification": [
+    "PermissionRequest": [
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash .olane/hooks/notification.sh",
-            "timeout": 10
+            "command": "bash .olane/hooks/olane-copass__permission_request.sh",
+            "timeout": 5,
+            "statusMessage": "Enriching permission context..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .olane/hooks/olane-copass__post_tool_use.sh",
+            "timeout": 10,
+            "async": true
           }
         ]
       }
     ],
     "Stop": [
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash .olane/hooks/stop.sh",
-            "timeout": 10
+            "command": "bash .olane/hooks/olane-copass__stop.sh",
+            "timeout": 10,
+            "async": true
           }
         ]
       }
