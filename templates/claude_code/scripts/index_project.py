@@ -35,6 +35,7 @@ DEFAULT_EXCLUDED_DIRS = {
     ".venv", "venv", ".tox", ".mypy_cache", ".pytest_cache", "coverage",
     "vendor", "target", ".idea", ".vscode", ".eggs", "egg-info",
     ".terraform", ".serverless", ".aws-sam", ".cache", ".parcel-cache",
+    ".olane",
 }
 
 DEFAULT_EXCLUDED_PATTERNS = {
