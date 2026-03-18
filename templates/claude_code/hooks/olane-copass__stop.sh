@@ -130,7 +130,7 @@ fi
 if [ -n "${TRANSCRIPT_PATH}" ] && [ -f "${TRANSCRIPT_PATH}" ]; then
     _log "INFO" "Ingesting transcript: ${TRANSCRIPT_PATH}"
     _olane_ingest_file_async "${TRANSCRIPT_PATH}" "agent_transcript" \
-        --source-id "${SESSION_ID}"
+        --additional-context "session_id=${SESSION_ID}"
 else
     _log "DEBUG" "No transcript file to ingest (path=${TRANSCRIPT_PATH})"
 fi

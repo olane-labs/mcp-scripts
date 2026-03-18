@@ -101,7 +101,7 @@ _respond() {
 # All networking and encryption is handled by the olane CLI.
 
 _olane_ingest_text() {
-    # Ingest text via olane CLI. Args: source_type [extra olane flags...]
+    # Ingest text via olane CLI (piped through stdin).
     local text="$1"
     local source_type="$2"
     shift 2
@@ -112,12 +112,11 @@ _olane_ingest_text() {
         project_args=(--project-id "${OLANE_PROJECT_ID}")
     fi
 
-    olane ingest text \
+    echo "${text}" | olane ingest text \
         --source-type "${source_type}" \
-        --client-type claude_code \
         "${project_args[@]}" \
         "${extra_args[@]}" \
-        -- "${text}" 2>/dev/null
+        --json 2>/dev/null
 }
 
 _olane_ingest_text_async() {
@@ -135,7 +134,7 @@ _olane_ingest_text_async() {
 }
 
 _olane_ingest_file() {
-    # Ingest a file via olane CLI. Args: file_path source_type [extra olane flags...]
+    # Ingest a file via olane CLI (passed as positional arg).
     local file_path="$1"
     local source_type="$2"
     shift 2
@@ -146,12 +145,11 @@ _olane_ingest_file() {
         project_args=(--project-id "${OLANE_PROJECT_ID}")
     fi
 
-    olane ingest file \
+    olane ingest text "${file_path}" \
         --source-type "${source_type}" \
-        --client-type claude_code \
         "${project_args[@]}" \
         "${extra_args[@]}" \
-        -- "${file_path}" 2>/dev/null
+        --json 2>/dev/null
 }
 
 _olane_ingest_file_async() {
@@ -169,10 +167,9 @@ _olane_ingest_file_async() {
 }
 
 _olane_context_query() {
-    # Query context layer via olane CLI. Returns JSON response on stdout.
+    # Query knowledge graph via olane CLI. Returns JSON response on stdout.
     local query="$1"
-    local source_type="${2:-user_prompt}"
-    shift 2 2>/dev/null || true
+    shift
     local extra_args=("$@")
 
     local project_args=()
@@ -180,12 +177,10 @@ _olane_context_query() {
         project_args=(--project-id "${OLANE_PROJECT_ID}")
     fi
 
-    olane context query \
-        --source-type "${source_type}" \
-        --client-type claude_code \
+    olane copass question "${query}" \
         "${project_args[@]}" \
         "${extra_args[@]}" \
-        -- "${query}" 2>/dev/null
+        --json 2>/dev/null
 }
 
 _olane_cosync_score() {
@@ -199,14 +194,14 @@ _olane_cosync_score() {
         project_args=(--project-id "${OLANE_PROJECT_ID}")
     fi
 
-    olane cosync score \
+    olane copass score "${query}" \
         "${project_args[@]}" \
         "${extra_args[@]}" \
-        -- "${query}" 2>/dev/null
+        --json 2>/dev/null
 }
 
 _olane_learning_requests() {
-    # Get learning requests for given terms. Returns context Copass knows about.
+    # Get context summary for given terms via copass context.
     local query="$1"
     shift
     local extra_args=("$@")
@@ -216,10 +211,11 @@ _olane_learning_requests() {
         project_args=(--project-id "${OLANE_PROJECT_ID}")
     fi
 
-    olane cosync learning-requests \
+    olane copass context \
+        --text-input "${query}" \
         "${project_args[@]}" \
         "${extra_args[@]}" \
-        -- "${query}" 2>/dev/null
+        --json 2>/dev/null
 }
 
 # ── Local Fallback ─────────────────────────────────────────────────────

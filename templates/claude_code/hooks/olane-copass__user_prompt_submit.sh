@@ -20,8 +20,8 @@ fi
 _log "INFO" "UserPromptSubmit: prompt_length=${#PROMPT}"
 
 # ── Query context layer via olane CLI ────────────────────────────────
-RESPONSE="$(_olane_context_query "${PROMPT}" "user_prompt")" || {
-    _log "WARN" "UserPromptSubmit: olane context query failed"
+RESPONSE="$(_olane_context_query "${PROMPT}")" || {
+    _log "WARN" "UserPromptSubmit: olane copass question failed"
     # Still ingest the prompt asynchronously
     _olane_ingest_text_async "${PROMPT}" "user_prompt"
     exit 0

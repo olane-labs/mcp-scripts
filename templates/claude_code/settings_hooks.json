@@ -12,31 +12,6 @@
         ]
       }
     ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .olane/hooks/olane-copass__permission_request.sh",
-            "timeout": 5,
-            "statusMessage": "Enriching permission context..."
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .olane/hooks/olane-copass__post_tool_use.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "hooks": [
