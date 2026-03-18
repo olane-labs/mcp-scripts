@@ -205,6 +205,23 @@ _olane_cosync_score() {
         -- "${query}" 2>/dev/null
 }
 
+_olane_learning_requests() {
+    # Get learning requests for given terms. Returns context Copass knows about.
+    local query="$1"
+    shift
+    local extra_args=("$@")
+
+    local project_args=()
+    if [ -n "${OLANE_PROJECT_ID}" ]; then
+        project_args=(--project-id "${OLANE_PROJECT_ID}")
+    fi
+
+    olane cosync learning-requests \
+        "${project_args[@]}" \
+        "${extra_args[@]}" \
+        -- "${query}" 2>/dev/null
+}
+
 # ── Local Fallback ─────────────────────────────────────────────────────
 _local_fallback() {
     local source="$1"
