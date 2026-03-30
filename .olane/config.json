@@ -1,3 +1,44 @@
 {
-  "copass_encryption_key": "21277471-de9d-4254-a994-6342f8b89dde"
+  "version": "1.0",
+  "copass": {
+    "silent_threshold": 0.85,
+    "ask_threshold": 0.6,
+    "block_threshold": 0.3,
+    "model_routing": {
+      "high_confidence": "opus",
+      "medium_confidence": "opus",
+      "low_confidence": "opus"
+    }
+  },
+  "indexing": {
+    "auto_incremental": true,
+    "full_reindex_schedule": "weekly",
+    "max_file_size_kb": 100,
+    "excluded_patterns": [
+      "node_modules",
+      ".git",
+      "__pycache__",
+      "dist",
+      "build"
+    ]
+  },
+  "hooks": {
+    "enabled": true,
+    "observation_mode": "async",
+    "local_fallback": true
+  },
+  "watch": {
+    "enabled": true,
+    "debounce_ms": 1500,
+    "poll_interval_ms": 2000,
+    "use_polling_fallback": true,
+    "service_id": "com.olane.watch.3153f41760cf",
+    "service_platform": "darwin"
+  },
+  "copass_encryption_key": "21277471-de9d-4254-a994-6342f8b89dde",
+  "api_url": "https://ai.copass.id",
+  "user_id": "6e5036e2-c048-4977-81e2-505020e115fc",
+  "auth_token": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImNjODFiZWI5LWFiZmEtNGQ3Yi1hZjE5LTMwMTc1ZmRlY2NiYSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2RpZnJjdmtheWZrcXptY3NobnZ3LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2ZTUwMzZlMi1jMDQ4LTQ5NzctODFlMi01MDUwMjBlMTE1ZmMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzczODg1NTQ2LCJpYXQiOjE3NzM4NDk1NDYsImVtYWlsIjoiaWFtQGJyZW5kb25nLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiLCJnb29nbGUiLCJnaXRodWIiXX0sInVzZXJfbWV0YWRhdGEiOnsiYXZhdGFyX3VybCI6Imh0dHBzOi8vYXZhdGFycy5naXRodWJ1c2VyY29udGVudC5jb20vdS8zMzAxNTIxP3Y9NCIsImN1c3RvbV9jbGFpbXMiOnsiaGQiOiJicmVuZG9uZy5jb20ifSwiZW1haWwiOiJpYW1AYnJlbmRvbmcuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZ1bGxfbmFtZSI6IkJyZW5kb24gR2hhZGVyaSIsImlzcyI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbSIsIm5hbWUiOiJCcmVuZG9uIEdoYWRlcmkiLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImJyZW5kb25nIiwicHJvdmlkZXJfaWQiOiIxMDk3MTg4Mjk4NjQ0MDE1MTE2OTAiLCJzdWIiOiIxMDk3MTg4Mjk4NjQ0MDE1MTE2OTAiLCJ1c2VyX25hbWUiOiJicmVuZG9uZyJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6Im90cCIsInRpbWVzdGFtcCI6MTc3Mzc4OTY3MX1dLCJzZXNzaW9uX2lkIjoiYWFkZmM3ZGUtNzJlZS00NTI2LTg1OTAtM2Q0YTFiMTM3ZmRlIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.tAZgGQjV7ZntKM8uZ82PUxG3o-kJf_cnyBp8-N11oQxpUpZ2ns0XF7mE4MjUzv629ppF-mWXsoBFwpbsYr3a4Q",
+  "project_id": "16604a85-5b2d-4d2b-b79e-2f59ca35f205",
+  "api_key": "olk_369264ca47180b425d03393413798c23473306e9146035f0a5722adfbdaef33d"
 }

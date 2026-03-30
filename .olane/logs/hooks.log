@@ -1,0 +1,12 @@
+[2026-03-30T19:28:34Z] [INFO] UserPromptSubmit: prompt_length=161
+[2026-03-30T19:28:34Z] [WARN] UserPromptSubmit: olane copass question failed
+[2026-03-30T19:33:14Z] [INFO] Stop: session=0b2fdb8e-b688-41a2-923d-caf5e0ff27f5 stop_hook_active=
+[2026-03-30T19:33:14Z] [INFO] Stop: plan detected, scoring via cosync
+[2026-03-30T19:33:14Z] [WARN] Stop: olane cosync score failed
+[2026-03-30T19:33:14Z] [INFO] Transcript delta: 222695 new bytes (offset 0 -> 222695)
+[2026-03-30T19:37:40Z] [INFO] UserPromptSubmit: prompt_length=107
+[2026-03-30T19:37:40Z] [WARN] UserPromptSubmit: olane copass question failed
+[2026-03-30T19:38:38Z] [INFO] Stop: session=0b2fdb8e-b688-41a2-923d-caf5e0ff27f5 stop_hook_active=
+[2026-03-30T19:39:21Z] [INFO] UserPromptSubmit: prompt_length=85
+[2026-03-30T19:39:21Z] [WARN] UserPromptSubmit: olane copass question failed
+[2026-03-30T19:39:32Z] [INFO] Stop: session=0b2fdb8e-b688-41a2-923d-caf5e0ff27f5 stop_hook_active=
