@@ -1,4 +1,3 @@
-
 ## MANDATORY: Copass Context Engineering (Non-Blocking)
 
 You MUST query Copass for context on every task — but do so **in parallel** with your other work, never as a blocking prerequisite.
@@ -6,4 +5,4 @@ You MUST query Copass for context on every task — but do so **in parallel** wi
 1. **Every new task** — Fire off `context_query` or `search_entities` calls **in the same tool-call batch** as your initial codebase reads/searches. Do NOT wait for Copass results before starting exploration. Incorporate Copass context as it arrives.
 2. **Personal questions about the user** — Always check Copass first. The ontology contains personal context that your built-in memory does not.
 
-**Key rule:** Never skip Copass — but never block on it either. Launch Copass calls concurrently with file reads, grep searches, and other tool calls in the same response.
+**Key rule:** Never block on it, continue working while it loads. Launch Copass calls concurrently with file reads, grep searches, and other tool calls in the same response.
