@@ -1,9 +1,11 @@
+CRITICAL:
+
 ## Copass — Ontology knowledge graph
 
-Copass context is automatically injected via hook on every message. Use it to scope your work.
+Copass context is automatically injected via hook on every user message. Use it to scope your work.
 
-- If you need deeper context, call `context_query` with `detail_level: "detailed"` or `search_entities`
-- For planning/architecture, call `get_score` first to check readiness
+- If you need semantic context, call `context_query`.
+- If you need to discover related entities, call `search_entities`.
 - If Copass returns thin results, proceed with code exploration but note the gap
 
-**After meaningful work:** call `ingest_text` or `ingest_code` to feed new knowledge back. Do this when you discover architecture decisions, new concepts, user-shared context, or corrections. Do NOT ingest trivial changes or ephemeral debugging context.
+**After work:** call `ingest_text` or `ingest_code` to feed new knowledge back. Do this when you discover architecture decisions, new concepts, user-shared context, or corrections.
