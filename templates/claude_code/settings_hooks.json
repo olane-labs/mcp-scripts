@@ -10,17 +10,6 @@
           }
         ]
       }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .olane/hooks/olane-copass__stop.sh",
-            "timeout": 15000
-          }
-        ]
-      }
     ]
   }
 }
