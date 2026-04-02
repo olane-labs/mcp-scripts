@@ -6,7 +6,7 @@
           {
             "type": "command",
             "command": "bash .olane/hooks/olane-copass__user_prompt_submit.sh",
-            "timeout": 15000,
+            "timeout": 15,
             "statusMessage": "Loading Copass context..."
           }
         ]
