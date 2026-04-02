@@ -43,7 +43,7 @@ RESPONSE="$(olane copass question "${PROMPT}" "${PROJECT_ARGS[@]}" --json 2>/dev
 }
 
 # ── Extract context from response ────────────────────────────────────
-CONTEXT="$(echo "${RESPONSE}" | jq -r '.context // empty' 2>/dev/null || true)"
+CONTEXT="$(echo "${RESPONSE}" | jq -r '.summary // empty' 2>/dev/null || true)"
 if [ -z "${CONTEXT}" ]; then
     exit 0
 fi
