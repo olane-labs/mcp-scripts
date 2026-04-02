@@ -1,38 +1,9 @@
-## MANDATORY: Copass-First Context Engineering
+## Copass — Ontology knowledge graph
 
-Copass is the ontology knowledge graph — it is the **source of truth** for project context, architecture decisions, people, and relationships. You MUST use it as your first step, not as a fallback.
+Copass context is automatically injected via hook on every message. Use it to scope your work.
 
-### Read: Always query BEFORE acting
+- If you need deeper context, call `context_query` with `detail_level: "detailed"` or `search_entities`
+- For planning/architecture, call `get_score` first to check readiness
+- If Copass returns thin results, proceed with code exploration but note the gap
 
-| Trigger                                       | Action                                                                                                                                                                             | Tool                                 |
-| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **New task or question**                      | Query Copass BEFORE reading files, searching code, or exploring the codebase. Use discovered entities to scope your work.                                                          | `context_query` or `search_entities` |
-| **Planning / architecture**                   | Score readiness BEFORE presenting any plan. If score is low, call `context_query` with `detail_level: "detailed"` on weak entities and surface gaps to the user before proceeding. | `get_score` → `context_query`        |
-| **Personal or people questions**              | Always check Copass first — the ontology contains personal and organisational context that built-in memory does not.                                                               | `context_query` or `search_entities` |
-| **Unfamiliar entity in code or conversation** | Search before assuming. Names, services, acronyms — look them up.                                                                                                                  | `search_entities`                    |
-
-**Non-negotiable rules:**
-
-- Do NOT skip Copass even if you think you already know the answer.
-- Do NOT read files or grep code until you have checked Copass for relevant context.
-- If Copass returns thin results, proceed with code exploration — but note the gap so it can be filled (see Write below).
-
-### Write: Feed knowledge back into the ontology
-
-| Trigger                                                                  | Action                                                                                                                                                                                                                  | Tool                                           |
-| ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| **New architecture decision or design rationale**                        | Ingest the decision with source context so future sessions can retrieve it.                                                                                                                                             | `ingest_text` with `source_type: "decision"`   |
-| **Significant new concept or entity discovered**                         | If you encounter a concept that Copass doesn't know about and that would be useful in future conversations, ingest it.                                                                                                  | `ingest_text` with entity hints                |
-| **User shares important context** (goals, constraints, domain knowledge) | Capture it in the ontology, not just in-session memory.                                                                                                                                                                 | `ingest_text` with `source_type: "user_input"` |
-| **After completing a task**                                              | If the task produced knowledge that Copass was missing (a gap you noted earlier), ingest it to close the gap.                                                                                                           | `ingest_text` or `ingest_code`                 |
-| **Mistake or correction**                                                | When you make an error, get corrected by the user, or discover a wrong assumption — ingest the correction and the _why_ so future sessions don't repeat it. Frame as "X is wrong because Y; the correct approach is Z." | `ingest_text` with `source_type: "correction"` |
-
-**Do NOT ingest:** trivial changes, code that is already indexed, or ephemeral debugging context.
-
-### The loop
-
-```
-Query Copass → Scope work → Do work → Ingest new knowledge → Repeat
-```
-
-Every conversation should leave the ontology richer than it found it.
+**After meaningful work:** call `ingest_text` or `ingest_code` to feed new knowledge back. Do this when you discover architecture decisions, new concepts, user-shared context, or corrections. Do NOT ingest trivial changes or ephemeral debugging context.

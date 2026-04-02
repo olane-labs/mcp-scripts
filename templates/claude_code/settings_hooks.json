@@ -6,8 +6,7 @@
           {
             "type": "command",
             "command": "bash .olane/hooks/olane-copass__user_prompt_submit.sh",
-            "timeout": 8,
-            "statusMessage": "Querying context layer..."
+            "timeout": 10000
           }
         ]
       }
@@ -18,8 +17,7 @@
           {
             "type": "command",
             "command": "bash .olane/hooks/olane-copass__stop.sh",
-            "timeout": 10,
-            "async": true
+            "timeout": 15000
           }
         ]
       }

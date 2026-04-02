@@ -1,8 +1,8 @@
 {
   "version": 1,
   "projectPath": "/Users/brendon/Development/olane/mcp-scripts",
-  "lastEventAt": "2026-04-02T00:49:47.117Z",
-  "lastSuccessAt": "2026-04-02T00:49:49.350Z",
+  "lastEventAt": "2026-04-02T16:19:37.800Z",
+  "lastSuccessAt": "2026-04-02T16:19:40.740Z",
   "lastError": null,
   "files": {
     ".mcp.json": {
@@ -12,10 +12,10 @@
       "lastIndexedAt": "2026-03-18T16:49:10.342Z"
     },
     "CLAUDE.md": {
-      "mtimeMs": 1775090985105.6516,
-      "size": 2890,
-      "sha256": "b805f168908d44e767090f63f9e290622518cb3f9ad39cfbeedfd5ef662f7ce8",
-      "lastIndexedAt": "2026-04-02T00:49:48.623Z"
+      "mtimeMs": 1775146775795.1428,
+      "size": 691,
+      "sha256": "aef3218ab5eb561414ae085beca9c8dcf1e032f04e7423bf8c9c1b889246fd6e",
+      "lastIndexedAt": "2026-04-02T16:19:39.305Z"
     },
     "README.md": {
       "mtimeMs": 1772763384277.9163,

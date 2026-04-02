@@ -1,47 +1,58 @@
 #!/usr/bin/env bash
-# olane-copass__user_prompt_submit.sh — UserPromptSubmit hook for Copass.
-# Captures the user's prompt, queries the context layer via olane CLI,
-# and injects enriched context back into Claude's conversation.
+# olane-copass__user_prompt_submit.sh
+# UserPromptSubmit hook: reads the user's prompt from stdin,
+# queries Copass via olane CLI, and injects context into the conversation.
+#
+# stdout → JSON response for Claude Code (ONLY output channel)
+# stderr → logging
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/olane-copass__common.sh"
+set -euo pipefail
 
-_read_event
-_check_enabled
-
-# ── Extract the user's prompt ────────────────────────────────────────
-PROMPT="$(_jq '.prompt')"
-
-if [ -z "${PROMPT}" ]; then
-    _log "WARN" "UserPromptSubmit: empty prompt"
+# ── Ensure olane CLI exists ──────────────────────────────────────────
+if ! command -v olane >/dev/null 2>&1; then
+    echo '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"[Copass] olane CLI not found — install with: npm i -g @olane/o-cli"}}'
     exit 0
 fi
 
-_log "INFO" "UserPromptSubmit: prompt_length=${#PROMPT}"
+# ── Read event from stdin ────────────────────────────────────────────
+EVENT="$(cat)"
+if [ -z "${EVENT}" ]; then
+    exit 0
+fi
 
-# ── Query context layer via olane CLI ────────────────────────────────
-RESPONSE="$(_olane_context_query "${PROMPT}")" || {
-    _log "WARN" "UserPromptSubmit: olane copass question failed"
-    # Still ingest the prompt asynchronously
-    _olane_ingest_text_async "${PROMPT}" "user_prompt"
+# ── Extract prompt ───────────────────────────────────────────────────
+PROMPT="$(echo "${EVENT}" | jq -r '.prompt // empty' 2>/dev/null || true)"
+if [ -z "${PROMPT}" ]; then
+    exit 0
+fi
+
+# ── Project ID (optional) ───────────────────────────────────────────
+PROJECT_ARGS=()
+CONFIG_FILE=".olane/config.json"
+if [ -f "${CONFIG_FILE}" ] && command -v jq >/dev/null 2>&1; then
+    PID="$(jq -r '.project_id // empty' "${CONFIG_FILE}" 2>/dev/null || true)"
+    if [ -n "${PID}" ]; then
+        PROJECT_ARGS=(--project-id "${PID}")
+    fi
+fi
+
+# ── Query Copass ─────────────────────────────────────────────────────
+RESPONSE="$(olane copass question "${PROMPT}" "${PROJECT_ARGS[@]}" --json 2>/dev/null)" || {
+    echo '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"[Copass] Query failed — proceeding without ontology context"}}'
     exit 0
 }
 
-# ── Parse context response ───────────────────────────────────────────
-CONTEXT=""
-if [ -n "${RESPONSE}" ] && command -v jq >/dev/null 2>&1; then
-    CONTEXT="$(echo "${RESPONSE}" | jq -r '.context // empty' 2>/dev/null || true)"
-fi
-
+# ── Extract context from response ────────────────────────────────────
+CONTEXT="$(echo "${RESPONSE}" | jq -r '.context // empty' 2>/dev/null || true)"
 if [ -z "${CONTEXT}" ]; then
-    _log "DEBUG" "UserPromptSubmit: no context returned"
     exit 0
 fi
 
-_log "INFO" "UserPromptSubmit: injecting context (length=${#CONTEXT})"
+# ── Escape for JSON and return ───────────────────────────────────────
+CONTEXT_ESC="$(echo "${CONTEXT}" | jq -Rs '.' 2>/dev/null)"
+# jq -Rs wraps in quotes, so strip them for embedding
+CONTEXT_ESC="${CONTEXT_ESC:1:${#CONTEXT_ESC}-2}"
 
-# ── Return enriched context to Claude ────────────────────────────────
-CONTEXT_ESC="$(_json_escape "${CONTEXT}")"
 cat <<ENDJSON
 {"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"${CONTEXT_ESC}"}}
 ENDJSON
