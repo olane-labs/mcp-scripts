@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "projectPath": "/Users/brendon/Development/olane/mcp-scripts",
+  "lastEventAt": "2026-04-02T00:49:47.117Z",
+  "lastSuccessAt": "2026-04-02T00:49:49.350Z",
+  "lastError": null,
+  "files": {
+    ".mcp.json": {
+      "mtimeMs": 1773852546583.244,
+      "size": 154,
+      "sha256": "7db85824dbb5bdda9cb06a26b5e9b0127abea2808c87b2b819d6965c9542f93e",
+      "lastIndexedAt": "2026-03-18T16:49:10.342Z"
+    },
+    "CLAUDE.md": {
+      "mtimeMs": 1775090985105.6516,
+      "size": 2890,
+      "sha256": "b805f168908d44e767090f63f9e290622518cb3f9ad39cfbeedfd5ef662f7ce8",
+      "lastIndexedAt": "2026-04-02T00:49:48.623Z"
+    },
+    "README.md": {
+      "mtimeMs": 1772763384277.9163,
+      "size": 14,
+      "sha256": "7bdab35366e0b982d411b45edaaa58a65df6f928848bf9aa6f85a5e50b6ca361",
+      "lastIndexedAt": "2026-03-18T16:49:10.342Z"
+    },
+    "templates/claude_code/claude_md.txt": {
+      "mtimeMs": 1773822946926.4763,
+      "size": 809,
+      "sha256": "1af492ab0e901066c8ac40ad130e8351b7ea95b5eb89684667e0a3dbef33c1ac",
+      "lastIndexedAt": "2026-03-18T16:49:10.342Z"
+    },
+    "templates/claude_code/hooks/olane-copass__common.sh": {
+      "mtimeMs": 1773822565915.467,
+      "size": 9792,
+      "sha256": "a6b0f3f697dbe10c7349075ff169114811b8b855ac8f68206000c7550784355b",
+      "lastIndexedAt": "2026-03-18T16:49:10.342Z"
+    },
+    "templates/claude_code/hooks/olane-copass__stop.sh": {
+      "mtimeMs": 1773822575629.1023,
+      "size": 7198,
+      "sha256": "a62ca06870e0dc9461b9b76bb56f1c3833941c6491c66a9e375609a2f8e2a2ac",
+      "lastIndexedAt": "2026-03-18T16:49:10.342Z"
+    },
+    "templates/claude_code/hooks/olane-copass__user_prompt_submit.sh": {
+      "mtimeMs": 1773822571481.9375,
+      "size": 1870,
+      "sha256": "7dd61402a69a85122ad214d36797211b2b17f219014a2f4062ef5b9971fb9173",
+      "lastIndexedAt": "2026-03-18T16:49:10.342Z"
+    },
+    "templates/claude_code/settings_hooks.json": {
+      "mtimeMs": 1773823209456.5898,
+      "size": 556,
+      "sha256": "f2a133b20594d648f995c342bf7dbd0111bc5dd5f17c6dcd8a5310c8b8a94e55",
+      "lastIndexedAt": "2026-03-18T16:49:10.342Z"
+    }
+  }
+}
