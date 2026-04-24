@@ -131,10 +131,12 @@ TITLE="[Copass] ## Discover: Relevant Context
 Candidate context from the user's knowledge graph that isn't in your current window. The items below are labels, not content — treat them as an index you must open before citing them.
 
 **How to use this response:**
-1. Scan for items that look relevant to the user's current question. Items are unranked — judge relevance from the title and path alone.
-2. Before answering from any item, call \`mcp__copass__interpret\` with its \`canonical_ids\` tuple to read the actual content. A title alone is not evidence — do not describe or rely on an item without interpreting it first. Batch multiple items into a single \`mcp__copass__interpret\` call.
-3. Use \`mcp__copass__search\` as a fallback when nothing in the menu looks obviously relevant but the question still implies the graph holds the answer.
-4. Skip this menu entirely when the user's question is already answerable from conversation or code in your context.
+1. **Interpret first** when the user asks *what*, *why*, *how*, *explain*, *tour*, *overview*, or about cross-repo behavior. Code shows *what exists*; the graph shows *what it means*. Batch multiple items into one \`mcp__copass__interpret\` call — items=[[<ids from item 1>], [<ids from item 2>], ...].
+2. Titles are not evidence. Do not cite, paraphrase, or describe an item without interpreting its canonical_ids first.
+3. Use \`mcp__copass__search\` as a fallback when the menu looks irrelevant but the question still implies graph context.
+4. Skip both only for: exact file/line lookups, command syntax, git state, or follow-ups already covered by a prior interpret call this turn.
+
+When in doubt, interpret. One call is cheap; answering from partial context and being corrected is not.
 
 **Tool access:** \`mcp__copass__interpret\` and \`mcp__copass__search\` are deferred MCP tools — their schemas are not preloaded. Before the first call in this turn, run \`ToolSearch\` with \`select:mcp__copass__interpret,mcp__copass__search\` to load them. After that, call them like any other tool."
 
