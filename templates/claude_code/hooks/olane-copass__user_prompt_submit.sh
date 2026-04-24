@@ -100,19 +100,11 @@ fi
 
 # -- Format the menu -------------------------------------------------
 # Each item renders as:
-#   [NN%] summary
+#   - summary
 #         canonical_ids: a, b, c
 MENU="$(printf '%s' "${RESPONSE}" | jq -r '
     (.items // [])[]
-    | (
-        "  [" +
-        ( if (.score | type) == "number"
-          then ((.score * 100) | floor | tostring) + "%"
-          else "--"
-          end ) +
-        "] " +
-        ( .summary // "(no summary)" )
-      ) as $head
+    | ("  - " + ( .summary // "(no summary)" )) as $head
     | (
         if ((.canonical_ids // []) | length) > 0
         then "\n        canonical_ids: " + ((.canonical_ids // []) | join(", "))
@@ -127,18 +119,26 @@ if [ -z "${MENU}" ]; then
     exit 0
 fi
 
-# -- Header + hint from response (with fallbacks) --------------------
-HEADER="$(printf '%s' "${RESPONSE}" | jq -r '.header // empty' 2>/dev/null || true)"
-HINT="$(printf '%s' "${RESPONSE}" | jq -r '.next_steps // empty' 2>/dev/null || true)"
-if [ -z "${HINT}" ]; then
-    HINT="Pass canonical_ids to \`copass interpret '[[\"cid1\",\"cid2\"]]'\` for a deeper brief."
-fi
+# -- Header + hint (locally authored, server prose is ignored) -------
+# We override the server's `header` / `next_steps` because that prose
+# refers to bare tool verbs like `interpret` / `search`. The actual MCP
+# tool ids are `mcp__copass__interpret` / `mcp__copass__search`, and
+# they are deferred — their schemas must be fetched via `ToolSearch`
+# (`select:mcp__copass__interpret,mcp__copass__search`) before the
+# tools can be called. The copy below tells the agent exactly that.
+TITLE="[Copass] ## Discover: Relevant Context
 
-if [ -n "${HEADER}" ]; then
-    TITLE="[Copass] ${HEADER}"
-else
-    TITLE="[Copass] ${COUNT} related context item(s) discovered."
-fi
+Candidate context from the user's knowledge graph that isn't in your current window. The items below are labels, not content — treat them as an index you must open before citing them.
+
+**How to use this response:**
+1. Scan for items that look relevant to the user's current question. Items are unranked — judge relevance from the title and path alone.
+2. Before answering from any item, call \`mcp__copass__interpret\` with its \`canonical_ids\` tuple to read the actual content. A title alone is not evidence — do not describe or rely on an item without interpreting it first. Batch multiple items into a single \`mcp__copass__interpret\` call.
+3. Use \`mcp__copass__search\` as a fallback when nothing in the menu looks obviously relevant but the question still implies the graph holds the answer.
+4. Skip this menu entirely when the user's question is already answerable from conversation or code in your context.
+
+**Tool access:** \`mcp__copass__interpret\` and \`mcp__copass__search\` are deferred MCP tools — their schemas are not preloaded. Before the first call in this turn, run \`ToolSearch\` with \`select:mcp__copass__interpret,mcp__copass__search\` to load them. After that, call them like any other tool."
+
+HINT="If any item above plausibly relates to the user's question, call \`mcp__copass__interpret\` on those canonical_ids before responding — titles are not evidence. \`mcp__copass__interpret\` accepts multiple tuples in one call, so batch them: \`mcp__copass__interpret(items=[[<canonical_ids from item 1>], [<canonical_ids from item 2>], ...])\`. Fall back to \`mcp__copass__search\` only when no item looks relevant but the question still seems to need graph context. Skip both when the conversation already has what you need. Remember: load schemas via \`ToolSearch\` first if you have not already this turn."
 
 # -- Render a hierarchical tree for the user (compact view) ----------
 # Pure local compute on the same RESPONSE JSON — no extra backend call.
